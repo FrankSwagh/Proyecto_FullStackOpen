@@ -1,0 +1,6 @@
+Termina el ejercicio 2.14 de obteniendo datos del servidor 
+
+- Falta solionar que cuando se escriba el nombre directo se imprima el clima
+- Tambien no se formatea la lista cuando cambia de pais, se imprime el clima del anterior
+
+**Muy importante: Recuerda que no puedes hacer mas de 250 peticiones al servidor de la api**
