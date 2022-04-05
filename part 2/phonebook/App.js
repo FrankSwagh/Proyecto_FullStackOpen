@@ -3,12 +3,33 @@ import AgregarNombre from "./components/AgregarNombre";
 import Busqueda from "./components/Buscar";
 import ImprimirBusqueda from "./components/ImprimirBusqueda";
 import Actividad from "./Services/phonebook";
+import "./indexx.css";
+import Notification from "./components/Alerta";
+
+const Alert = ({ message }) => {
+  if (message === null) {
+    return null;
+  }
+  const AlertStyle = {
+    color: "red",
+    background: "lightgray",
+    fontSize: "20px",
+    borderStyle: "solid",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  };
+
+  return <div style={AlertStyle}>{message}</div>;
+};
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [newSearch, setSearch] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(null);
 
   useEffect(() => {
     Actividad.getAll()
@@ -20,7 +41,7 @@ const App = () => {
       });
   }, []);
 
-  const listado = persons.filter(elem => elem.name.includes(newSearch))
+  const listado = persons.filter((elem) => elem.name.includes(newSearch));
 
   const ImprimirNombres = (event) => {
     event.preventDefault();
@@ -33,7 +54,10 @@ const App = () => {
       console.log("nueva per", newPerson);
       Actividad.create(newPerson)
         .then((respose) => {
-          window.alert(`${newName} has been addded`);
+          setErrorMessage(`${newName} has been addded`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 3000);
           setNewName("");
           setNewPhone("");
           setPersons(persons.concat(respose));
@@ -51,11 +75,9 @@ const App = () => {
     event.preventDefault();
     const id = event.target.value;
     const borrarpersona = persons.find((pers) => pers.id == id);
-    if (window.confirm(`Delete ${borrarpersona.name}?`)){
-      Actividad
-        .borrar(id)
-        .then(() => {
-          setPersons(persons.filter((pers) => pers.id != id));
+    if (window.confirm(`Delete ${borrarpersona.name}?`)) {
+      Actividad.borrar(id).then(() => {
+        setPersons(persons.filter((pers) => pers.id != id));
       });
     }
   };
@@ -66,19 +88,30 @@ const App = () => {
       let nombres = [];
       nombres.push(indice.name);
       if (nombres.includes(newName)) {
-        window.confirm(`${newName} is already in phonebook, replace the old number with a new one?`);
+        window.confirm(
+          `${newName} is already in phonebook, replace the old number with a new one?`
+        );
         let datos = persons.find((pers) => pers.name == newName);
         const newUpdate = {
           ...datos,
           number: newPhone,
         };
-        Actividad
-        .update(datos.id,newUpdate)
-        .then(respose => {
-          setPersons(persons.map(elem => elem.id === respose.id ? respose : elem))
-          window.alert(`${newName} has ben updated`)
-        })
-        sino = true
+        Actividad.update(datos.id, newUpdate)
+          .then((respose) => {
+            setPersons(
+              persons.map((elem) => (elem.id === respose.id ? respose : elem))
+            );
+            setErrorMessage(`${newName} has ben updated`);
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 3000);
+          })
+          .catch((error) => {
+            setAlertMessage(
+              `Information of ${newName} has already been removed from the server`
+            );
+          });
+        sino = true;
       } else {
         sino = false;
       }
@@ -103,6 +136,8 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Busqueda buscarPersona={BuscarPersona} newSearch={newSearch} />
+      <Notification message={errorMessage} />
+      <Alert message={alertMessage} />
       <h2>Add a new</h2>
       <AgregarNombre
         ImprimirNombres={ImprimirNombres}
