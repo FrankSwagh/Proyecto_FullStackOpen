@@ -1,35 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AgregarNombre from "./components/AgregarNombre";
 import Busqueda from "./components/Buscar";
 import ImprimirBusqueda from "./components/ImprimirBusqueda";
+import Actividad from "./Services/phonebook";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { id: 1, name: "Arto Hellas", number: "040-123456" },
-    { id: 2, name: "Ada Lovelace", number: "39-44-5323523" },
-    { id: 3, name: "Dan Abramov", number: "12-43-234345" },
-    { id: 4, name: "Mary Poppendieck", number: "39-23-6423122" },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [newSearch, setSearch] = useState("");
 
+  useEffect(() => {
+    Actividad.getAll()
+      .then((respose) => {
+        setPersons(respose);
+      })
+      .catch(() => {
+        console.log("Error al obtener datos");
+      });
+  }, []);
+
+  const listado = persons.filter(elem => elem.name.includes(newSearch))
+
   const ImprimirNombres = (event) => {
     event.preventDefault();
-    console.log("algo?");
-    if (Alerta()) {
+    if (!Alerta()) {
       const newPerson = {
+        id: "",
         name: newName,
         number: newPhone,
-        id: persons.length + 1,
       };
-      setPersons(persons.concat(newPerson));
+      console.log("nueva per", newPerson);
+      Actividad.create(newPerson)
+        .then((respose) => {
+          window.alert(`${newName} has been addded`);
+          setNewName("");
+          setNewPhone("");
+          setPersons(persons.concat(respose));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
       setNewName("");
       setNewPhone("");
     }
-    setNewName("");
-      setNewPhone("");
+  };
+
+  const BorrarNombre = (event) => {
+    event.preventDefault();
+    const id = event.target.value;
+    const borrarpersona = persons.find((pers) => pers.id == id);
+    if (window.confirm(`Delete ${borrarpersona.name}?`)){
+      Actividad
+        .borrar(id)
+        .then(() => {
+          setPersons(persons.filter((pers) => pers.id != id));
+      });
+    }
   };
 
   const Alerta = () => {
@@ -38,10 +66,21 @@ const App = () => {
       let nombres = [];
       nombres.push(indice.name);
       if (nombres.includes(newName)) {
-        window.alert(`${newName} is already in phonebook`);
-        sino = false;
+        window.confirm(`${newName} is already in phonebook, replace the old number with a new one?`);
+        let datos = persons.find((pers) => pers.name == newName);
+        const newUpdate = {
+          ...datos,
+          number: newPhone,
+        };
+        Actividad
+        .update(datos.id,newUpdate)
+        .then(respose => {
+          setPersons(persons.map(elem => elem.id === respose.id ? respose : elem))
+          window.alert(`${newName} has ben updated`)
+        })
+        sino = true
       } else {
-        sino = true;
+        sino = false;
       }
       return sino;
     });
@@ -50,12 +89,10 @@ const App = () => {
 
   const CambiarNombre = (event) => {
     setNewName(event.target.value);
-    console.log(event.target.value);
   };
 
   const CambiarTelefono = (event) => {
     setNewPhone(event.target.value);
-    console.log(event.target.value);
   };
 
   const BuscarPersona = (event) => {
@@ -75,7 +112,11 @@ const App = () => {
         CambiarTelefono={CambiarTelefono}
       />
       <h2>Numbers</h2>
-      <ImprimirBusqueda persons={persons} newSearch={newSearch} />
+      <ImprimirBusqueda
+        persons={listado}
+        newSearch={newSearch}
+        BorrarNombre={BorrarNombre}
+      />
     </div>
   );
 };

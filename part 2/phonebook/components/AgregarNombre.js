@@ -5,7 +5,6 @@ const AgregarNombre = ({
   CambiarTelefono,
   ImprimirNombres
 }) => {
-  console.log(ImprimirNombres);
   return (
     <div>
       <form onSubmit={ImprimirNombres}>

@@ -1,6 +1,6 @@
 import React from "react";
 
-const ImprimirBusqueda = ({ persons, newSearch }) => {
+const ImprimirBusqueda = ({ persons, newSearch, BorrarNombre }) => {
   let minus = newSearch.toLowerCase();
   let mayus = newSearch.toString().toLowerCase();
   let primeraLetra = mayus.slice(0, 1);
@@ -26,8 +26,7 @@ const ImprimirBusqueda = ({ persons, newSearch }) => {
     <div>
       {arreglo.map((persona) => (
         <li key={persona.id}>
-          {persona.name}
-          {persona.number}
+          {persona.name}.  {persona.number} <button type="button" value={persona.id} onClick={BorrarNombre}>Delete</button>
         </li>
       ))}
     </div>
