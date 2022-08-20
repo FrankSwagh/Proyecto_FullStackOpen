@@ -1,0 +1,108 @@
+
+body{
+    background-color: #c1c1c2;
+}
+
+h2{
+    font-family: cursive;
+}
+
+.containerBody{
+    background-color: #5e636e;
+    height: 100vw;
+}
+
+.navMenu{
+    border-radius: 30px;
+}
+
+.formDiv{
+    margin: auto;
+    width: 60%;
+    background-color: #327985;
+    border-radius: 20px;
+    border: 3px solid #22012c;
+    border-style: dashed;
+    padding: 9px;
+}
+
+.logginDiv{
+    margin: auto;
+    width: 60%;
+    font-family: 'Franklin Gothic Medium';
+    background-color: #a5ae6d;
+    border-radius: 20px;
+    border: 5px solid #22012c;
+    border-style: groove;
+    padding: 12px;
+}
+
+.blogDiv{
+    padding: 8px;
+    background-color: #5c5131;
+    border-radius: 20px;
+    border: 3px solid #22012c;
+    border-style: dashed;
+}
+
+.userDiv{
+    padding: 8px;
+    background-color: #496a42;
+    border-radius: 20px;
+    border: 3px solid #22012c;
+    border-style: dashed;
+}
+
+.containerBlogList{
+    color: rgb(105, 19, 162);
+    padding: 8px;
+    background-color: #858585;
+    border-radius: 20px;
+    border: 3px solid #22012c;
+    border-style: double;
+}
+
+.containerUserList{
+    color: rgb(105, 19, 162);
+    padding: 8px;
+    background-color: #858585;
+    border-radius: 20px;
+    border: 3px solid #000000;
+    border-style: double;
+}
+
+.tableUser{
+    background-color: #5d535d;
+    border-radius: 20px;
+    border-style: hidden;
+    font-family: fantasy;
+}
+
+
+.menuText{
+    justify-content: end;
+}
+
+a:link {
+    color: rgb(75, 115, 38);
+    background-color: transparent;
+    text-decoration: none;
+  }
+  
+  a:visited {
+    color: rgb(67, 3, 23);
+    background-color: transparent;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: red;
+    background-color: transparent;
+    text-decoration: underline;
+  }
+  
+  a:active {
+    color: chocolate;
+    background-color: transparent;
+    text-decoration: underline;
+  }
